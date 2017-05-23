@@ -13,20 +13,20 @@ def index():
     return render_template('index.html',images = images)
 
 @app.route('/image/<int:image_id>/')
+@login_required
 def image(image_id):
     image = Image.query.get(image_id)
     if image == None:
-        return  redirect('/')
+        return redirect('/')
     return render_template('pageDetail.html', image = image)
-
 
 @app.route('/profile/<int:user_id>/')
 @login_required
 def profile(user_id):
     user = User.query.get(user_id)
     if user == None:
-        return  redirect('/')
-    paginate = Image.query.filter_by(user_id=user_id).paginate(page=1, per_page=3,error_out=False)
+        return redirect('/')
+    paginate = Image.query.paginate(page=1, per_page=3)
     return render_template('profile.html', user = user, has_next=paginate.has_next, images=paginate.items)
 
 @app.route('/profile/images/<int:user_id>/<int:page>/<int:per_page>/')
@@ -42,14 +42,15 @@ def user_images(user_id, page, per_page):
     map['images'] = images
     return json.dumps(map)
 
+
 @app.route('/regloginpage/')
-def regloginpage():
+def regloginpage(msg=''):
     if current_user.is_authenticated:
         return redirect('/')
-    msg = ''
+
     for m in get_flashed_messages(with_categories=False, category_filter=['reglogin']):
         msg = msg + m
-        # 如果已经登录的就跳到首页
+    # 如果已经登录的就跳到首页
     return render_template('login.html', msg=msg, next=request.values.get('next'))
 
 def redirect_with_msg(target, msg, category):
