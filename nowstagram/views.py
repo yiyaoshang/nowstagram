@@ -5,7 +5,7 @@ from models import Image, User, Comment
 from flask import render_template, redirect, request, flash, get_flashed_messages, send_from_directory
 import random, hashlib, json, uuid, os
 from flask_login import login_user, logout_user, current_user, login_required
-
+from qiniusdk import qiniu_upload_file
 
 
 @app.route('/index/images/<int:page>/<int:per_page>/')
@@ -150,6 +150,49 @@ def logout():
     return redirect('/')
 
 
+@app.route('/image/<image_name>')
+def view_image(image_name):
+    return send_from_directory(app.config['UPLOAD_DIR'], image_name)
 
+
+@app.route('/addcomment/', methods={'post'})
+@login_required
+def add_comment():
+    image_id = int(request.values['image_id'])
+    content = request.values['content']
+    comment = Comment(content, image_id, current_user.id)
+    db.session.add(comment)
+    db.session.commit()
+    return json.dumps({"code":0, "id":comment.id,
+                       "content":comment.content,
+                       "username":comment.user.username,
+                       "user_id":comment.user_id})
+
+def save_to_qiniu(file, file_name):
+    return qiniu_upload_file(file, file_name)
+
+def save_to_local(file, file_name):
+    save_dir = app.config['UPLOAD_DIR']
+    file.save(os.path.join(save_dir, file_name))
+    return '/image/' + file_name
+
+@app.route('/upload/', methods={"post"})
+@login_required
+def upload():
+    file = request.files['file']
+    # http://werkzeug.pocoo.org/docs/0.10/datastructures/
+    # 需要对文件进行裁剪等操作
+    file_ext = ''
+    if file.filename.find('.') > 0:
+        file_ext = file.filename.rsplit('.', 1)[1].strip().lower()
+    if file_ext in app.config['ALLOWED_EXT']:
+        file_name = str(uuid.uuid1()).replace('-', '') + '.' + file_ext
+        url = qiniu_upload_file(file, file_name)
+        #url = save_to_local(file, file_name)
+        if url != None:
+            db.session.add(Image(url, current_user.id))
+            db.session.commit()
+
+    return redirect('/profile/%d' % current_user.id)
 
 
