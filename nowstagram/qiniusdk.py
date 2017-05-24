@@ -15,7 +15,7 @@ domain_prefix = app.config['QINIU_DOMAIN']
 
 def qiniu_upload_file(source_file, save_file_name):
     # 生成上传 Token，可以指定过期时间等
-    token = q.upload_token(bucket_name, save_file_name)
+    token = q.upload_token(bucket_name, save_file_name,3600)
 
     ret, info = put_data(token, save_file_name, source_file.stream)
 
