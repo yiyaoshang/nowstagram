@@ -3,7 +3,7 @@
 {% block css %}/static/styles/pages/index.css{% endblock%}
 {% block content %}
 <div class="page-main clearfix js-image-list">
-{% for image in images: %}
+{% for image in images %}
     <article class="mod">
         <header class="mod-hd">
             <time class="time">{{ image.created_date }}</time>
@@ -23,14 +23,14 @@
         </div>
         <div class="mod-ft">
             <ul class="discuss-list ">
-                <li class="more-discuss js-discuss-list">
+                <li class="more-discuss">
                     <a>
-                        <span>全部 </span><span class="lenth-{{ id }}">{{image.comments|length}}</span>
+                        <span>全部 </span><span class="lenth-">{{image.comments|length}}</span>
                         <span> 条评论</span></a>
                 </li>
-                <div class = "js-discuss-list-{{ id }}">
+                <div class = "js-discuss-list-">
                 </div>
-                {% for comment in image.comments: %}
+                {% for comment in image.comments %}
                 {% if loop.index > 2 %} {% break %} {% endif %}
                 <li>
                     <!-- <a class=" icon-remove" title="删除评论"></a> -->
@@ -44,20 +44,21 @@
             <section class="discuss-edit">
                     <a class="icon-heart"></a>
                     <form>
-                        <input placeholder="添加评论..." id = "jsCmt-{{ id }}" type="text">
-                        <input id = "js-image-id-{{ id }}" type = "text" style="display: none" value="96">
+                        <input placeholder="添加评论..." id = "jsCmt-" type="text">
+                        <input id = "js-image-id-" type = "text" style="display: none" value="{{ image.id }}">
                     </form>
-                    <button class="more-info" id = "jsSubmit-{{ id }}">更多选项</button>
+                    <button class="more-info" id = "jsSubmit-">更多选项</button>
             </section>
         </div>
     </article>
 {% endfor %}
-{% if has_next %}
-<div class="more-content js-load-more">
-    <a class="_oidfu" href="javascript:void(0);">更多</a>
+
 </div>
-{% endif %}
-</div>
+    {% if has_next %}
+        <div class="more-content js-load-more">
+            <a class="_oidfu" href="javascript:void(0);">更多</a>
+        </div>
+   {% endif %}
 {% endblock%}
 {% block js %}
 <script type="text/javascript">

@@ -160,6 +160,7 @@ $(function () {
                 '<div class="img-box">',
                     '<a href = "/image/#{image_id}">',
                     '<img src="#{image_url}">',
+                     '</a>',
                ' </div>',
            ' </div>',
            ' <div class="mod-ft">',

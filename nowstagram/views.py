@@ -35,7 +35,7 @@ def index_images(page, per_page):
 @app.route('/')
 def index():
     images = Image.query.order_by(db.desc(Image.id)).limit(5).all()
-    return render_template('index.html', images=images)
+    return render_template('index.html', images=images,has_next=True)
 
 
 @app.route('/image/<int:image_id>/')
