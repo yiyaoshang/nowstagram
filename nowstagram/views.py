@@ -8,7 +8,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from qiniusdk import qiniu_upload_file
 
 
-@app.route('/index/images/<int:page>/<int:per_page>/')
+@app.route('/images/<int:page>/<int:per_page>/')
 def index_images(page, per_page):
     paginate = Image.query.order_by(db.desc(Image.id)).paginate(page=page, per_page=per_page, error_out=False)
     map = {'has_next': paginate.has_next}
@@ -25,7 +25,7 @@ def index_images(page, per_page):
                  'comment_count': len(image.comments),
                  'user_id': image.user_id,
                  'head_url':image.user.head_url,
-                 'created_date':str(image.created_date),
+                 'create_date':str(image.create_date),
                  'comments':comments}
         images.append(imgvo)
 
@@ -34,7 +34,7 @@ def index_images(page, per_page):
 
 @app.route('/')
 def index():
-    images = Image.query.order_by(db.desc(Image.id)).limit(10).all()
+    images = Image.query.order_by(db.desc(Image.id)).limit(5).all()
     return render_template('index.html', images=images)
 
 
@@ -187,8 +187,8 @@ def upload():
         file_ext = file.filename.rsplit('.', 1)[1].strip().lower()
     if file_ext in app.config['ALLOWED_EXT']:
         file_name = str(uuid.uuid1()).replace('-', '') + '.' + file_ext
-        url = qiniu_upload_file(file, file_name)
-        #url = save_to_local(file, file_name)
+        #url = qiniu_upload_file(file, file_name)
+        url = save_to_local(file, file_name)
         if url != None:
             db.session.add(Image(url, current_user.id))
             db.session.commit()

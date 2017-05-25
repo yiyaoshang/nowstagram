@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="Keywords" content="">
-
     <title>{% block title %} {% endblock %}</title>
     <link rel="stylesheet" href="{% block css %} {% endblock %}">
 </head>
@@ -18,15 +17,15 @@
                         {% if current_user.is_authenticated %}
                         <a class="profile-ico" href="/profile/{{current_user.id}}" title="{{current_user.username}}">{{current_user.username}}</a>
                         {% else %}
-                        <a class="profile-ico" href="/regloginpage/">注册/登录</a>
+                        <a class="profile-ico" href="/regloginpage/"></a>
                         {% endif %}
-
                     </div>
                 </div>
             </header>
 
             {% block content %} {% endblock %}
-
+            {% block js %}{% endblock%}
+        <!--
             <footer class="footer">
                 <div class="footer-cont" style="max-width:935px;">
                     <nav>
@@ -40,7 +39,7 @@
                             <li>
                                 <a href="http://weibo.com/u/2829675282/home">博客</a>
                             </li>
-                            <!--
+
                             <li>
                                 <a href="#">新闻中心</a>
                             </li>
@@ -56,7 +55,6 @@
                             <li>
                                 <a href="#">条款</a>
                             </li>
-                            -->
                             <li>
                                 <span class="language-wrapper">
                                     <span>语言</span>
@@ -91,13 +89,15 @@
                                     </select>
                                 </span>
                             </li>
+
                         </ul>
                     </nav>
                     <span class="copy-right">© 2017 nowstagram</span>
                 </div>
             </footer>
+            -->
         </section>
     </div>
 </body>
-{% block js %}{% endblock%}
 </html>
+

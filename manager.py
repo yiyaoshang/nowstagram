@@ -50,8 +50,9 @@ def update_database():
 def show_database():
     #print 1, User.query.all()
     #print 2, User.query.get(3)  # primary key = 3
-    print 3, User.query.filter_by(id=2).first()
+    #print 3, User.query.filter_by(id=2).first()
     #print 4, User.query.order_by(User.id.desc()).offset(1).limit(2).all()
+    print 4,Image.query.order_by(db.desc(Image.id)).limit(10).all()
     #print 5, User.query.paginate(page=1, per_page=10).items
     #u = User.query.get(1)
     #print 6, u
