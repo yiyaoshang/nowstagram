@@ -91,16 +91,16 @@ def login():
     password = request.values.get('password').strip()
 
     if username == '' or password == '':
-        return redirect_with_msg('/regloginpage/', u'用户名或密码不能为空', 'reglogin')
+        return redirect_with_msg('/regloginpage/', '用户名或密码不能为空', 'reglogin')
 
     user = User.query.filter_by(username=username).first()
     if user == None:
-        return redirect_with_msg('/regloginpage/', u'用户名不存在', 'reglogin')
+        return redirect_with_msg('/regloginpage/', '用户名不存在', 'reglogin')
 
     m = hashlib.md5()
     m.update(password + user.salt)
     if (m.hexdigest() != user.password):
-        return redirect_with_msg('/regloginpage/', u'密码错误', 'reglogin')
+        return redirect_with_msg('/regloginpage/', '密码错误', 'reglogin')
 
     login_user(user)
 
@@ -119,11 +119,11 @@ def reg():
     password = request.values.get('password').strip()
 
     if username == '' or password == '':
-        return redirect_with_msg('/regloginpage/', u'用户名或密码不能为空', 'reglogin')
+        return redirect_with_msg('/regloginpage/', '用户名或密码不能为空', 'reglogin')
 
     user = User.query.filter_by(username=username).first()
     if user != None:
-        return redirect_with_msg('/regloginpage/', u'用户名已经存在', 'reglogin')
+        return redirect_with_msg('/regloginpage/', '用户名已经存在', 'reglogin')
 
     # 更多判断
 

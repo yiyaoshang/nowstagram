@@ -7,12 +7,11 @@ import random
 manager = Manager(app)
 
 def get_image_url():
-    return 'http://images.nowcoder.com/head/' + str(random.randint(0,1000)) + 'm.png'
+    return '../static/touxiang/' + str(random.randint(0,127)) + '.jpg'
 
 ##创建数据库
 @manager.command
 def init_database():
-    db.drop_all()
     db.create_all()
     for i in range(0,100):
         db.session.add(User('User' + str(i),'a'+str(i)))

@@ -53,7 +53,7 @@ class User(db.Model):
         self.username = username
         self.password = passworld
         self.salt = salt
-        self.head_url = '/static/touxiang/' + str(random.randint(0,127)) + '.jpg'
+        self.head_url = '../static/touxiang/' + str(random.randint(0,127)) + '.jpg'
 
     def __repr__(self):
         return '<User %d %s>' % (self.id, self.username)
