@@ -146,7 +146,7 @@ $(function () {
                 var sHtml = '';
                 $.each(oResult.images, function (nIndex, oImage) {
                     sHtml_part1_1 = that.tpl([
-                        '<article class="mod">',
+                         '<article class="mod">',
             '<header class="mod-hd">',
                 '<time class="time">#{ image.create_date }</time>',
                 '<a href="/profile/#{image_user_id}" class="avatar">',
@@ -160,7 +160,6 @@ $(function () {
                 '<div class="img-box">',
                     '<a href = "/image/#{image_id}">',
                     '<img src="#{image_url}">',
-                     '</a>',
                ' </div>',
            ' </div>',
            ' <div class="mod-ft">',

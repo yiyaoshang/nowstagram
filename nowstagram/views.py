@@ -7,35 +7,35 @@ import random, hashlib, json, uuid, os
 from flask_login import login_user, logout_user, current_user, login_required
 from qiniusdk import qiniu_upload_file
 
-
-@app.route('/images/<int:page>/<int:per_page>/')
-def index_images(page, per_page):
-    paginate = Image.query.order_by(db.desc(Image.id)).paginate(page=page, per_page=per_page, error_out=False)
-    map = {'has_next': paginate.has_next}
-    images = []
-    for image in paginate.items:
-        comments = []
-        for i in range(0, min(2, len(image.comments))):
-            comment = image.comments[i]
-            comments.append({'username':comment.user.username,
-                             'user_id':comment.user_id,
-                             'content':comment.content})
-        imgvo = {'id': image.id,
-                 'url': image.url,
-                 'comment_count': len(image.comments),
-                 'user_id': image.user_id,
-                 'head_url':image.user.head_url,
-                 'create_date':str(image.create_date),
-                 'comments':comments}
-        images.append(imgvo)
-
-    map['images'] = images
-    return json.dumps(map)
-
 @app.route('/')
 def index():
-    images = Image.query.order_by(db.desc(Image.id)).limit(5).all()
-    return render_template('index.html', images=images,has_next=True)
+    paginate = Image.query.order_by(db.desc(Image.id)).paginate(page=1, per_page=5, error_out=False)
+    return render_template('index.html', images=paginate.items,has_next=paginate.has_next)
+
+
+# 首页ajax 的json 数据
+@app.route('/images/<int:page_num>/<int:per_page>/')
+def index_paginate(page_num, per_page):
+    images = Image.query.order_by('id desc').paginate(page=page_num, per_page=per_page, error_out=False)
+    map = {'has_next' : images.has_next}
+    image = []
+    for item in images.items:
+        comment_user_username = []
+        comment_user_id = []
+        comment_content = []
+        for comments_i in item.comments:
+            comment_user_username.append(comments_i.user.username)
+            comment_user_id.append(comments_i.user.id)
+            comment_content.append(comments_i.content)
+
+        imgov = {'image_user_id': item.user.id, 'image_user_head_url': item.user.head_url, 'image_user_username': item.user.username,
+                 'image_id':item.id, 'image_url':item.url, 'image_comments_length':len(item.comments), 'comment_user_username': comment_user_username,
+                 'comment_user_id':comment_user_id, 'comment_content':comment_content}
+
+        image.append(imgov)
+
+    map['images'] = image
+    return json.dumps(map)
 
 
 @app.route('/image/<int:image_id>/')

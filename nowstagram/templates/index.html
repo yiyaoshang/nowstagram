@@ -23,43 +23,45 @@
         </div>
         <div class="mod-ft">
             <ul class="discuss-list ">
-                <li class="more-discuss">
-                    <a>
-                        <span>全部 </span><span class="lenth-">{{image.comments|length}}</span>
-                        <span> 条评论</span></a>
-                </li>
-                <div class = "js-discuss-list-">
-                </div>
-                {% for comment in image.comments %}
-                {% if loop.index > 2 %} {% break %} {% endif %}
-                <li>
-                    <!-- <a class=" icon-remove" title="删除评论"></a> -->
-                    <a class="_4zhc5 _iqaka" title="zjuyxy" href="/profile/{{comment.user_id}}" data-reactid=".0.1.0.0.0.2.1.2:$comment-17856951190001917.1">{{comment.user.username}}</a>
-                    <span>
-                        <span>{{comment.content}}</span>
-                    </span>
-                </li>
-                {%endfor%}
-            </ul>
-            <section class="discuss-edit">
+                <li class="more-discuss js-discuss-list">
+                        <a>
+                            <span>全部 </span><span class="length-{{loop.index}}">{{image.comments | length}}</span>
+                            <span> 条评论</span>
+                        </a>
+                    </li>
+                    <div class = "js-discuss-list-{{loop.index}}">
+
+                    </div>
+
+                    {% for comment in image.comments %}
+                    {% if loop.index > 2 %}{% break %}{% endif %}
+                    <li>
+                        <!--<a class=" icon-remove" title="删除评论"></a>-->
+                        <a class="_4zhc5 _iqaka" title="{{comment.user.username}}" href="/profile/{{comment.user.id}}" data-reactid=".0.1.0.0.0.2.1.2:$comment-17856951190001917.1">{{comment.user.username}}</a>
+                        <span>
+                            <span>{{comment.content}}</span>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <section class="discuss-edit">
                     <a class="icon-heart"></a>
                     <form>
-                        <input placeholder="添加评论..." id = "jsCmt-" type="text">
-                        <input id = "js-image-id-" type = "text" style="display: none" value="{{ image.id }}">
+                        <input placeholder="添加评论..." id = "jsCmt-{{loop.index}}" type="text">
+                        <input id = "js-image-id-{{loop.index}}" type = "text" style="display: none" value="{{image.id}}">
                     </form>
-                    <button class="more-info" id = "jsSubmit-">更多选项</button>
-            </section>
-        </div>
-    </article>
-{% endfor %}
+                    <button class="more-info" id = "jsSubmit-{{loop.index}}">更多选项</button>
+                </section>
+                   </div>
+        </article>
+        {% endfor %}
+    </div>
 
-</div>
-    {% if has_next %}
-        <div class="more-content js-load-more">
-            <a class="_oidfu" href="javascript:void(0);">更多</a>
-        </div>
-   {% endif %}
-{% endblock%}
+    <div class="more-content js-load-more">
+        <a class="_oidfu" href="javascript:void(0);">更多</a>
+    </div>
+{% endblock %}
+
 {% block js %}
 <script type="text/javascript">
     window.uid = None;
