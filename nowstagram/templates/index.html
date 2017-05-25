@@ -6,7 +6,7 @@
 {% for image in images %}
     <article class="mod">
         <header class="mod-hd">
-            <time class="time">{{ image.created_date }}</time>
+            <time class="time">{{ image.create_date }}</time>
             <a href="/profile/{{image.user.id}}" class="avatar">
                 <img src="{{image.user.head_url}}">
             </a>
