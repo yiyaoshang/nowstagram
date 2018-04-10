@@ -70,6 +70,10 @@ def user_images(user_id, page, per_page):
     map['images'] = images
     return json.dumps(map)
 
+def redirect_with_msg(target, msg, category):
+    if msg != None:
+        flash(msg, category=category)
+    return redirect(target)
 
 @app.route('/regloginpage/')
 def regloginpage():
@@ -78,29 +82,22 @@ def regloginpage():
         msg = msg + m
     return render_template('login.html', msg=msg, next=request.values.get('next'))
 
-
-def redirect_with_msg(target, msg, category):
-    if msg != None:
-        flash(msg, category=category)
-    return redirect(target)
-
-
 @app.route('/login/', methods={'post', 'get'})
 def login():
     username = request.values.get('username').strip()
     password = request.values.get('password').strip()
 
     if username == '' or password == '':
-        return redirect_with_msg('/regloginpage/', '用户名或密码不能为空', 'reglogin')
+        return redirect_with_msg('/regloginpage/', u'用户名或密码不能为空', 'reglogin')
 
     user = User.query.filter_by(username=username).first()
     if user == None:
-        return redirect_with_msg('/regloginpage/', '用户名不存在', 'reglogin')
+        return redirect_with_msg('/regloginpage/', u'用户名不存在', 'reglogin')
 
     m = hashlib.md5()
     m.update(password + user.salt)
     if (m.hexdigest() != user.password):
-        return redirect_with_msg('/regloginpage/', '密码错误', 'reglogin')
+        return redirect_with_msg('/regloginpage/', u'密码错误', 'reglogin')
 
     login_user(user)
 
@@ -119,11 +116,11 @@ def reg():
     password = request.values.get('password').strip()
 
     if username == '' or password == '':
-        return redirect_with_msg('/regloginpage/', '用户名或密码不能为空', 'reglogin')
+        return redirect_with_msg('/regloginpage/', u'用户名或密码不能为空', 'reglogin')
 
     user = User.query.filter_by(username=username).first()
     if user != None:
-        return redirect_with_msg('/regloginpage/', '用户名已经存在', 'reglogin')
+        return redirect_with_msg('/regloginpage/', u'用户名已经存在', 'reglogin')
 
     # 更多判断
 
@@ -187,8 +184,8 @@ def upload():
         file_ext = file.filename.rsplit('.', 1)[1].strip().lower()
     if file_ext in app.config['ALLOWED_EXT']:
         file_name = str(uuid.uuid1()).replace('-', '') + '.' + file_ext
-        #url = qiniu_upload_file(file, file_name)
-        url = save_to_local(file, file_name)
+        url = qiniu_upload_file(file, file_name)
+        #url = save_to_local(file, file_name)
         if url != None:
             db.session.add(Image(url, current_user.id))
             db.session.commit()
