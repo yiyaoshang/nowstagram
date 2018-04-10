@@ -1,1 +1,1 @@
-ps -ef|grep gunicorn|awk '{print $2}'|xargs kill -9
+ps -ef|grep nowstagram|awk '{print $2}'|xargs kill -9
